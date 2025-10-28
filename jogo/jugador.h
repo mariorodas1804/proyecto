@@ -1,4 +1,10 @@
 
+#include "librerias.h"
+#include "enemigos.h"
+#include "preguntas.h"
+#include "mapa.h"
+#include "partida.h"
+
 typedef bool tVector [5];
 
 typedef struct jugador{
@@ -29,3 +35,12 @@ inicializarStats(){
         }
     }
 }
+
+actualizarVida(tVector, bool(instruccion de perder o ganar)); //Se usa parametrizacion para saber que hacer con la vida y ahorrar una funcion
+//sumarVida
+//restarVida
+actualizarPuntaje(bool(instruccion de sumar o restar), int cuanto sumar o restar); //Se usa parametrizacion para saber que hacer con la puntuacion y ahorrar una funcion
+//sumarpuntaje()
+//restarpuntaje()
+sumarVentaja(int);
+

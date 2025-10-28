@@ -1,0 +1,18 @@
+meetings:
+
+-estructuracion 
+-ideas (IA base)
+-debates
+-desiciones de proyecto
+-integracion de conocimientos y elementos pedidos
+-Divide y venceras
+-intento de modularizacion de funciones
+-puesta en comun con la profesora
+
+---------------------------------------------------------------
+
+-modificaciones
+-Intento de borradores y modelos
+-ideas de buena practica
+-progreso con el proyecto
+-seccionamiento de los TDA y librerias
