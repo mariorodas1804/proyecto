@@ -28,6 +28,9 @@ en el que el camino se base en desiciones de donde quiere dirigirse el jugador
 
 // SEPARACION DE DE SECCIONES EN BIBLIOTECAS
 
+
+//
+#include "librerias.h"
 #include "jugador.h"
 #include "enemigos.h"
 #include "preguntas.h"
@@ -40,19 +43,22 @@ FILE * archivoPartida; //busqueda de partida guardada o generacion de partida nu
 
 int main(){
     
+    inicializadorDelJuego();
     menu();
 
 }
 
 menu(){
-  //  inicializadorDelJuego(){
+  //  inicializadorDelJuego(){\
+  
+  int opcion;
     
     switch(opcion){
     
     case 1 = partidaNueva{
         
         variable nivel=0;
-        generacionDelMapa();
+        generacionMapa();
         
         break;
     }
@@ -112,8 +118,7 @@ recorrido(){
         preguntaBoss(2)
         preguntaBoss(3)
         preguntaBoss(4)
-        
-        
+}
         
 inicializadorDelJuego(){
     
