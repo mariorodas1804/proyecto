@@ -19,6 +19,7 @@ typedef int tVector [9];
 
 void generacionMapa(); //vector
 void recorridoMapa();
+void avanzarEnMapa(tRegJugador*);
 
 int jugador;
 
@@ -37,7 +38,7 @@ void mostrarMapa(){
     
 }
 
-void avanzarEnMapa(){
+void avanzarEnMapa(tRegJugador* pJugador){
     
     vector1personaje(avanzar)
     vector2mapa(eliminar Nodo pasado)

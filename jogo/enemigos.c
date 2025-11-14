@@ -151,3 +151,12 @@ void preguntaBoss(int pnivel){
         puntuacion+4;
         */
 }
+generacionPregunta(jugador1.nivel pNivel){
+    switch(pNivel){
+                case 1:{
+                    generacionPregunta(1);
+                	break;
+                }
+                case 2
+            }
+}
