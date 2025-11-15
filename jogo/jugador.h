@@ -5,7 +5,8 @@
 #include "mapa.h"
 #include "partida.h"
 
-typedef bool tVector [5];
+typedef bool tVidas [5];
+
 
 typedef struct jugador{
         
@@ -15,7 +16,7 @@ typedef struct jugador{
         bool ventajasCambio;
         bool ventajaEliminar;
     
-};
+}tRegJugador;
 
 FILE * archivoJugador;
 
@@ -36,11 +37,12 @@ inicializarStats(){
     }
 }
 
-actualizarVida(tVector, bool(instruccion de perder o ganar)); //Se usa parametrizacion para saber que hacer con la vida y ahorrar una funcion
+actualizarVida(tRegJugador*, bool(instruccion de perder o ganar)); //Se usa parametrizacion para saber que hacer con la vida y ahorrar una funcion
 //sumarVida
 //restarVida
-actualizarPuntaje(bool(instruccion de sumar o restar), int cuanto sumar o restar); //Se usa parametrizacion para saber que hacer con la puntuacion y ahorrar una funcion
+actualizarPuntaje(tRegJugador*, bool(instruccion de sumar o restar), int cuanto sumar o restar); //Se usa parametrizacion para saber que hacer con la puntuacion y ahorrar una funcion
 //sumarpuntaje()
 //restarpuntaje()
 sumarVentaja(int);
 
+mostrarStats();
