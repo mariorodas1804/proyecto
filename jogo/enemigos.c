@@ -1,8 +1,5 @@
 //enemigos y BOSS
-#include "librerias.h"
-#include "jugador.h"
-#include "preguntas.h"
-#include "mapa.h"
+
 #include "partida.h"
 
 typedef bool tVector [3];
@@ -38,14 +35,14 @@ typedef struct{
     tString respuesta;
 }tRespuestas;
 
-a b c d
+//a b c d
 
 //se va a guardar un registro de tipo tPreguntas con la linea correspondiente a la pregunta que toco
 //tambien se guarda un registro de tipo trespuestas con la respuesta correcta
 //fread(&regPregunta);fread(&regRepuesta)
 
-scanf(char, respuesta);
-tolower(respuesta);
+//scanf(char, respuesta);
+//tolower(respuesta);
 
 switch (grado) {
         case 'a':
