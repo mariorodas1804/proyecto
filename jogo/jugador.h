@@ -1,8 +1,4 @@
-
 #include "librerias.h"
-//#include "enemigos.h"
-//#include "preguntas.h"
-//#include "mapa.h"
 #define VIDAS 7
 
 //definicion de vector para guardar vidas
@@ -12,7 +8,7 @@ typedef bool tVidas [VIDAS];
 typedef struct{
         
         tVidas vida;
-        float puntaje;
+        int puntaje;
         int nivel;
         bool ventajaCambio;
         bool ventajaEscudo;
@@ -26,6 +22,7 @@ void actualizarVida(tRegJugador*, int);
 void actualizarPuntaje(tRegJugador*, int, int);
 void actualizarVentaja(tRegJugador*, int, int);
 void mostrarStats(tRegJugador);
+int acumuladorVidas();
 
 /*
 FILE * archivoJugador;
@@ -113,4 +110,14 @@ void mostrarStats(tRegJugador jugador1){
 	printf("------------------------------");
 	printf("\n");
 	system("pause");
+}
+
+int acumuladorVidas(tRegJugador jugador1){
+    int aux, i;
+    for(i=0; i<VIDAS; i++){
+        if(jugador1.vida[i]){
+           aux++;
+        }
+    }
+    return aux;
 }
