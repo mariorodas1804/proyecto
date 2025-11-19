@@ -33,11 +33,11 @@ void campamento(){
 
 void tienda(tRegJugador *jugador1){
     int opcion;
-    
     if(!jugador1->ventajaCambio){
         if(!jugador1->ventajaEscudo){
             do{
-               printf("\nNo posee ninguna ventaja,solo puedes adquirir una, cual quieres adquirir? \n(1-Cambio pregunta(2pts), 2-Escudo(3pts), 3-No adquirir ninguna(0pts))");
+               printf("\nNo posee ninguna ventaja,solo puedes adquirir una, cual quieres adquirir? \n(1-Cambio pregunta(2pts), 2-Escudo(3pts), 3-No adquirir ninguna(0pts))\n");
+               fflush(stdin);
                scanf("%d", &opcion);   
                switch(opcion){
                    case 1:{
@@ -47,60 +47,63 @@ void tienda(tRegJugador *jugador1){
                        break;
                    }
                    case 2:{
-                       printf("\nAdquirio ventaja escudo");
+                       printf("\nAdquirio ventaja escudo\n");
                        actualizarVentaja(jugador1, 1, 2);
                        actualizarPuntaje(jugador1, 2, 3);
        	               break;
                    }
                    case 3:{
-                       printf("\nHasta luego!");
+                       printf("\nHasta luego!\n");
                        break;
                    }
                    default:printf("\nError: eligio un numero incorrecto");
                }
-            }while(opcion<=0 && opcion>=3);
+            }while(opcion!=1 && opcion!=2);
             
         }else{
-            
             do{
-               printf("\nYa posees Ventaja cambio, puedes adquirir ventaja escudo, quieres adquirirla? \n(1-Si 3pts, 2-No 0pts)");
+               printf("\nYa posees Ventaja escudo, puedes adquirir ventaja cambio, quieres adquirirla? \n(1-Si 2pts, 2-No 0pts)\n");
+               fflush(stdin);
                scanf("%d", &opcion);   
                switch(opcion){
                    case 1:{
-                       printf("\nAdquirio ventaja escudo");
-                       actualizarVentaja(jugador1, 1, 2);
-                       actualizarPuntaje(jugador1, 2, 3);
-       	               break;
-                   }
-                   
-                   case 2:{
-                       printf("\nHasta luego!");
-                       break;
-                   }
-                   default:printf("\nError: eligio un numero incorrecto");
-               }
-            }while(opcion<=0 && opcion>=3);
-        }
-        
-    }else{
-          do{
-               printf("\nYa posees Ventaja escudo, puedes adquirir ventaja cambio, quieres adquirirla? \n(1-Si 2pts, 2-No 0pts)");
-               scanf("%d", &opcion);   
-               switch(opcion){
-                   case 1:{
-                       printf("\nAdquirio ventaja cambio");
+                       printf("\nAdquirio ventaja cambio\n");
                        actualizarVentaja(jugador1, 1, 1);
                        actualizarPuntaje(jugador1, 2, 2);
        	               break;
                    }
                    
                    case 2:{
-                       printf("\nHasta luego!");
+                       printf("\nHasta luego!\n");
                        break;
                    }
-                   default:printf("\nError: eligio un numero incorrecto");
+                   default:printf("\nError: eligio un numero incorrecto\n");
                }
-            }while(opcion<=0 && opcion>=3);
+            }while(opcion!=1 && opcion!=2);
+        }
+        
+    }else{
+        if(!jugador1->ventajaEscudo){
+            do{
+                printf("\nYa posees Ventaja cambio, puedes adquirir ventaja escudo, quieres adquirirla? \n(1-Si 3pts, 2-No 0pts)\n");
+                fflush(stdin);
+                scanf("%d", &opcion);   
+                switch(opcion){
+                   case 1:{
+                       printf("\nAdquirio ventaja escudo\n");
+                       actualizarVentaja(jugador1, 1, 2);
+                       actualizarPuntaje(jugador1, 2, 3);
+                       break;
+                   }
+                   
+                   case 2:{
+                       printf("\nHasta luego!\n");
+                       break;
+                   }
+                   default:printf("\nError: eligio un numero incorrecto\n");
+                }
+            }while(opcion!=1 && opcion!=2);
+        }
     }
     
 }
