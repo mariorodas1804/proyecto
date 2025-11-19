@@ -3,7 +3,7 @@
 
 
 int main(){
-    
+    srand(time(NULL));
     inicializadorDelJuego();
     
 }

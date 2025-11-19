@@ -4,38 +4,13 @@
 #define TAMANIOVECTORPREGUNTAS 40
 #define TAMANIOVECTORRESPUESTAS 20
 
-typedef char tString [60];
+typedef char tString [200];
 
 typedef struct{
     tString pregunta;
 }tRegArchivo;
 
 typedef bool tVector [3];
-
-typedef struct{
-    
-    int dificultad;
-    int pregunta;
-    char respuestaCorrecta;
-    
-    
-}tEnemigo;
-
-typedef struct{
-    
-    int preguntaBoss;
-    char respuestaCorrectaBoss;
-  //  tVector vida;
-    
-}tBoss;
-
-typedef struct{
-    tString pregunta;
-    tString respuestaA;
-    tString respuestaB;
-    tString respuestaC;
-    tString respuestaD;
-}tPreguntas;
 
 char correcta;
 
@@ -49,10 +24,6 @@ tVectorPreguntas vectorPreguntasFaciles, vectorPreguntasNormales, vectorPregunta
 tVectorRespuestas vectorRespuestasFaciles, vectorRespuestasNormales, vectorRespuestasDificiles;
 
 //archivos dat externos con preguntas y respuestas
-FILE * archivoPreguntas;
-FILE * archivoRespuestas;
-
-//a b c d
 
 //se va a guardar un registro de tipo tPreguntas con la linea correspondiente a la pregunta que toco
 //tambien se guarda un registro de tipo trespuestas con la respuesta correcta
@@ -121,26 +92,26 @@ bool respuestaCorrecta(char pEleccion, char pRespuesta){
 }
 
 void nivelDificultad(int pDificultad, int pVidas, int pPuntaje){
-    int numeroAleatorio=rand()/2;
+    int numeroAleatorio=(rand()%40)/2;
     printf("\n");//hud
     printf("\n");
     printf("\n");
     switch(pDificultad){
      case 1:{
           printf("%s\n\n", vectorPreguntasFaciles[numeroAleatorio*2]);
-          printf("\t\t\t\t\t%s", vectorPreguntasFaciles[(numeroAleatorio*2)+1]);
+          printf("\t\t%s", vectorPreguntasFaciles[(numeroAleatorio*2)+1]);
           correcta=vectorRespuestasFaciles[numeroAleatorio];
      	  break;
      }
      case 2:{
           printf("%s\n\n", vectorPreguntasNormales[numeroAleatorio*2]);
-          printf("\t\t\t\t\t%s", vectorPreguntasNormales[(numeroAleatorio*2)+1]);
+          printf("\t\t%s", vectorPreguntasNormales[(numeroAleatorio*2)+1]);
           correcta=vectorRespuestasNormales[numeroAleatorio];
      	  break;
      }
      case 3:{
           printf("%s\n\n", vectorPreguntasDificiles[numeroAleatorio*2]);
-          printf("\t\t\t\t\t%s", vectorPreguntasDificiles[(numeroAleatorio*2)+1]);
+          printf("\t\t%s", vectorPreguntasDificiles[(numeroAleatorio*2)+1]);
           correcta=vectorRespuestasDificiles[numeroAleatorio];
      	  break;
      }
@@ -197,4 +168,39 @@ void generacionPregunta(int pVida,int pPuntaje,int pNivel, int *pNivelPregunta){
     }
 }
 
-void abrirArchivos(){}
+void abrirArchivos(){
+    FILE * archivoPreguntas;
+    FILE * archivoRespuestas;
+    tRegArchivo regPreguntas;
+    int i;
+    char respuestas;
+    archivoPreguntas=fopen("preguntasFaciles.dat", "rb");
+    for (i=0; i<TAMANIOVECTORPREGUNTAS; i++){
+        fread(&regPreguntas, sizeof(tString), 1, archivoPreguntas);
+        strcpy(vectorPreguntasFaciles[i], regPreguntas.pregunta);
+    }
+    archivoPreguntas=fopen("preguntasNormales.dat","rb");
+    for (i=0; i<TAMANIOVECTORPREGUNTAS; i++){
+        fread(&regPreguntas, sizeof(tString), 1, archivoPreguntas);
+        strcpy(vectorPreguntasNormales[i], regPreguntas.pregunta);
+    }
+    archivoPreguntas=fopen("preguntasDificiles.dat","rb");
+    for (i=0; i<TAMANIOVECTORPREGUNTAS; i++){
+        fread(&regPreguntas, sizeof(tString), 1, archivoPreguntas);
+        strcpy(vectorPreguntasDificiles[i], regPreguntas.pregunta);
+    }
+    
+    archivoRespuestas=fopen("respuestasFaciles.txt","r");
+    for (i = 0; i < TAMANIOVECTORRESPUESTAS && !feof(archivoRespuestas); i++) {
+        vectorRespuestasFaciles[i] = fgetc(archivoRespuestas);
+    }
+    archivoRespuestas=fopen("respuestasNormales.txt","r");
+    for (i = 0; i < TAMANIOVECTORRESPUESTAS && !feof(archivoRespuestas); i++) {
+        vectorRespuestasNormales[i] = fgetc(archivoRespuestas);
+    }
+    archivoRespuestas=fopen("respuestasDificiles.txt","r");
+    for (i = 0; i < TAMANIOVECTORRESPUESTAS && !feof(archivoRespuestas); i++) {
+        vectorRespuestasDificiles[i] = fgetc(archivoRespuestas);
+    }
+    
+}

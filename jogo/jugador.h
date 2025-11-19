@@ -110,10 +110,11 @@ void mostrarStats(tRegJugador jugador1){
 	printf("------------------------------");
 	printf("\n");
 	system("pause");
+	printf("\n");
 }
 
 int acumuladorVidas(tRegJugador jugador1){
-    int aux, i;
+    int aux=0, i;
     for(i=0; i<VIDAS; i++){
         if(jugador1.vida[i]){
            aux++;
