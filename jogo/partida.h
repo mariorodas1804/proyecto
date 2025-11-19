@@ -1,50 +1,12 @@
 //partida va a ser la biblioteca que llama a la mayoria de las otras funciones
 #include "librerias.h"
 
-#include "jugador.h"
 //#include "enemigos.h"
 //#include "preguntas.h"
-//#include "mapa.h"
-#define TAMANIOVECTORPREGUNTAS 40
-#define TAMANIOVECTORRESPUESTAS 20
+#include "enemigos.h"
 
-typedef char tString [60];
-
-typedef struct{
-    tString pregunta;
-}tRegArchivo;
-
-
-/*                    por hacer
-intro();
-switch 1inicializador
-       2exit
-
-menu();  //main.h
-
-generacionMapa();
-                 Campamento();     //mapa.h
-                 tienda();         //mapa.h
-
-generacionEnemigo();
-generacionPregunta(): //deberia estar dentro de generacionEnemigo
-preguntaBoss();
-
-generacionMapa();  //mapa.h
-
-grafico ubicacion = nivel del jugador;
-                ________________________________________________  
-               |   
-               |           printf(    %s
-               |               
-               |            pritnf( 
-               |__________________________________________________
-
-
-*/
 
 //Prototipado de funciones en Partida.h
-void abrirArchivos();
 void inicializadorDelJuego();
 void procesoJuego(tRegJugador*);
 void generacionPelea(tRegJugador*);
@@ -53,63 +15,16 @@ void intro();
 void menu();
 void creditos();
 
-//Tipos de datos para vectores con preguntas y respuestas
-typedef tString tVectorPreguntas[TAMANIOVECTORPREGUNTAS];
-typedef char tVectorRespuestas[TAMANIOVECTORRESPUESTAS];
 
-//variables globales de vectores con preguntas y respuestas
-tVectorPreguntas vectorPreguntasFaciles, vectorPreguntasNormales, vectorPreguntasDificiles;
-tVectorRespuestas vectorRespuestasFaciles, vectorRespuestasNormales, vectorRespuestasDificiles;
-
-//archivos dat externos con preguntas y respuestas
-FILE * archivoPreguntas;
-FILE * archivoRespuestas;
 
 //variables globales generales
 tRegJugador jugador;
-int nivelPregunta;
+int nivelPregunta, vidasRestantes;
 
-void abrirArchivos(){
-    tRegArchivo regPreguntas;
-    int i;
-    char respuestas;
-    archivoPreguntas=fopen("preguntasFaciles.dat", "rb");
-    for (i=0; i<TAMANIOVECTORPREGUNTAS; i++){
-        fread(&regPreguntas, sizeof(tString), 1, archivoPreguntas);
-        strcpy(vectorPreguntasFaciles[i], regPreguntas.pregunta);
-    }
-    archivoPreguntas=fopen("preguntasNormales.dat","rb");
-    for (i=0; i<TAMANIOVECTORPREGUNTAS; i++){
-        fread(&regPreguntas, sizeof(tString), 1, archivoPreguntas);
-        strcpy(vectorPreguntasNormales[i], regPreguntas.pregunta);
-    }
-    archivoPreguntas=fopen("preguntasDificiles.dat","rb");
-    for (i=0; i<TAMANIOVECTORPREGUNTAS; i++){
-        fread(&regPreguntas, sizeof(tString), 1, archivoPreguntas);
-        strcpy(vectorPreguntasDificiles[i], regPreguntas.pregunta);
-    }
-    
-    archivoRespuestas=fopen("respuestasFaciles.txt","r");
-    for (i=0; i<TAMANIOVECTORRESPUESTAS; i++){
-        fscanf(archivoRespuestas, "%c", respuestas);
-        vectorRespuestasFaciles[i]=respuestas;
-    }
-    archivoRespuestas=fopen("respuestasNormales.txt","r");
-    for (i=0; i<TAMANIOVECTORRESPUESTAS; i++){
-        fscanf(archivoRespuestas, "%c", respuestas);
-        vectorRespuestasNormales[i]=respuestas;
-    }
-    archivoRespuestas=fopen("respuestasDificiles.txt","r");
-    for (i=0; i<TAMANIOVECTORRESPUESTAS; i++){
-        fscanf(archivoRespuestas, "%c", respuestas);
-        vectorRespuestasDificiles[i]=respuestas;
-    }
-    
-}
 
 void inicializadorDelJuego(){
     
-    intro():
+    intro();
     abrirArchivos();
     generacionMapa();
     menu();
@@ -130,10 +45,11 @@ void procesoJuego(tRegJugador* jugador1){
                 switch(campaOTienda){
                     case 1:{
                         campamento();
+                        actualizarVida(jugador1,1);
                     	break;
                     }
                     case 2:{
-                        tienda(); 
+                        tienda(jugador1); 
                     	break;
                     }
                     default:printf("\nError opcion incorrecta");
@@ -144,14 +60,16 @@ void procesoJuego(tRegJugador* jugador1){
         }
         else{
             if(jugador1->nivel==5){
-                
+                mostrarMapa(5);
+                vidasRestantes=acumuladorVidas(*jugador1);
                 printf("OH NO, DOS ENEMIGOS DE ELITES HAN APARECIDO!!");
-                generacionPregunta(5, &cantidadPuntaje);
+                mostrarMapa(55);
+                generacionPregunta(vidasRestantes,jugador1->puntaje,5, &cantidadPuntaje);
                 generacionPelea(jugador1);
             
                 actualizarPuntaje(jugador1, 2, 2);
             
-                generacionPregunta(5, &cantidadPuntaje);
+                generacionPregunta(vidasRestantes,jugador1->puntaje,5, &cantidadPuntaje);
                 generacionPelea(jugador1);
                 
                 
@@ -159,10 +77,11 @@ void procesoJuego(tRegJugador* jugador1){
             
             }
 			else{
+			    mostrarMapa(jugador1->nivel);
 				generacionEnemigo();  //grafico
-            
+                vidasRestantes=acumuladorVidas(*jugador1);
                 printf("OH NO UN ENEMIGO SALVAJE HA APARECIDO");
-                generacionPregunta(jugador1->nivel, &cantidadPuntaje);
+                generacionPregunta(vidasRestantes,jugador1->puntaje,jugador1->nivel, &cantidadPuntaje);
                 generacionPelea(jugador1);
                 
                 actualizarPuntaje(jugador1, 2, cantidadPuntaje); //nivelPregunta
@@ -177,14 +96,16 @@ void procesoJuego(tRegJugador* jugador1){
       if(jugador1->nivel == 9){
             
             printf("EL JEFE ESTA ENOJADO!");
-            
-            generacionPregunta(9, &cantidadPuntaje);
+            mostrarMapa(9);
+            generacionPregunta(vidasRestantes,jugador1->puntaje,9, &cantidadPuntaje);
             generacionPelea(jugador1);
-            generacionPregunta(9, &cantidadPuntaje);
+            mostrarMapa(10);
+            generacionPregunta(vidasRestantes,jugador1->puntaje,9, &cantidadPuntaje);
             generacionPelea(jugador1);
-            generacionPregunta(10, &cantidadPuntaje);
+            mostrarMapa(11);
+            generacionPregunta(vidasRestantes,jugador1->puntaje,9, &cantidadPuntaje);
             generacionPelea(jugador1);
-            
+            mostrarMapa(12);
             printf("Haz vencido al jefe");
             creditos();
       }
@@ -196,14 +117,11 @@ void procesoJuego(tRegJugador* jugador1){
           exit(EXIT_SUCCESS);
       }  
 }
-
-//pregunta 1 (39/2)*2             respuesta<MAx && respuesta%2     int ((aleatorio%MAX)/2)*2 &sorteado%2
-//a) b) c) d)           
-
+       
 void generacionPelea(tRegJugador* jugador1){
     char respuesta;
     bool respuestaIncorrecta, escudo=false;
-    int opcion;
+    int opcion,i, cantidadPuntaje;
     
     if(jugador1->ventajaCambio){
         if(jugador1->ventajaEscudo){
@@ -213,7 +131,7 @@ void generacionPelea(tRegJugador* jugador1){
                switch(opcion){
                    case 1:{
                        printf("\nNueva pregunta:\n");
-                       generacionPregunta(jugador1->nivel);
+                       generacionPregunta(vidasRestantes,jugador1->puntaje, jugador1->nivel, &cantidadPuntaje);
                        actualizarVentaja(jugador1, 2, 1);
                        break;
                    }
@@ -239,7 +157,7 @@ void generacionPelea(tRegJugador* jugador1){
                switch(opcion){
                    case 1:{
                        printf("\nNueva pregunta:\n");
-                       generacionPregunta(jugador1->nivel);
+                       generacionPregunta(vidasRestantes,jugador1->puntaje, jugador1->nivel, &cantidadPuntaje);
                        actualizarVentaja(jugador1, 2, 1);
                        break;
                    }
@@ -276,17 +194,29 @@ void generacionPelea(tRegJugador* jugador1){
     }
     
 	do{
-       	scanf("%c", &respuesta);
-    	if(respuestaCorrecta(respuesta)){
+        vidasRestantes=acumuladorVidas(*jugador1);
+        graficoPregunta(vidasRestantes, jugador1->puntaje);
+        
+        do{
+          fflush(stdin);
+          scanf("%c", &respuesta);
+          if(!esABCD(respuesta)){
+             printf("\nElegista una letra equivocada, ingrese denuevo\n");
+          }
+        }while(!esABCD(respuesta));
+           
+    	if(respuestaCorrecta(tolower(respuesta), correcta)){
     	    printf("\nRespuesta correcta! Puede avanzar.");
        		respuestaIncorrecta=false;     		
        	}
     	else{
-    	    printf("\nRespuesta incorrecta!");
+ 	       
     		respuestaIncorrecta=true;
     		if(escudo){
     		    printf(" \nProtegido por el escudo!");
+    		    printf("\n\n\n\t\tRESPUESTA INCORRECTA, TE QUEDAN: %d (responda devuelta)\n",vidasRestantes);
     		}else{
+    		    printf("\n\n\n\t\tRESPUESTA INCORRECTA, PERDISTE UNA VIDA TE QUEDAN: %d (responda devuelta)\n",vidasRestantes-1);
     		    actualizarVida(jugador1, 2);
     		}
     	}
@@ -322,7 +252,6 @@ bool preguntarContinuar(){
     
 }
 
-
 void intro(){
     
     printf("Hola! bienvenido al juego slay the algorithm!");
@@ -332,6 +261,7 @@ void intro(){
     sleep(3);
     system("cls");
 }
+
 void creditos(){
     
     printf("Este juego fue desarrollado y tiene los derechos reservados a Fabricio Gonzalez Oviedo y Mario Daniel Rodas.");
@@ -340,6 +270,7 @@ void creditos(){
     system("pause");
     exit(EXIT_SUCCESS);
 }
+
 void menu(){
     int seleccion;
     tRegJugador jugador;
@@ -374,14 +305,4 @@ void menu(){
     }while(seleccion!=3);
     
 }
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-        
+       
