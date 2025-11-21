@@ -15,4 +15,12 @@ meetings:
 -Intento de borradores y modelos
 -ideas de buena practica
 -progreso con el proyecto
--seccionamiento de los TDA y librerias
+-seccionamiento de los TDA y librerías
+
+
+
+---------------------------------------------------------------
+
+
+17/11
+-actualizaciones y estructuraciones lógicas de partida

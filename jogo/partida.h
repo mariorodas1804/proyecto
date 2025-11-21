@@ -1,9 +1,6 @@
-//partida va a ser la biblioteca que llama a la mayoria de las otras funciones
-
 #include "enemigos.h"
 
-
-//Prototipado de funciones en Partida.h
+//Prototipado de funciones
 void inicializadorDelJuego();
 void procesoJuego(tRegJugador*);
 void generacionPelea(tRegJugador*);
@@ -12,13 +9,11 @@ void intro();
 void menu();
 void creditos();
 
-
-
 //variables globales generales
 tRegJugador jugador;
 int nivelPregunta, vidasRestantes;
 
-
+//Funcion principal que estructura el juego
 void inicializadorDelJuego(){
     
     intro();
@@ -27,15 +22,15 @@ void inicializadorDelJuego(){
     
 };
 
+//Funcion que desarrolla el juego
 void procesoJuego(tRegJugador* jugador1){
     
     int campaOTienda, cantidadPuntaje;
     inicializarStats(jugador1);
-    jugador1->nivel=8;
     do{
-        mostrarMapa(jugador1->nivel);
+        mostrarMapa(jugador1->nivel); //Pasamos el parametro del nivel en el que se encuentra el jugador para que el mapa grafique segun lo pasado
         
-        if(jugador1->nivel==3 || jugador1->nivel==8){
+        if(jugador1->nivel==3 || jugador1->nivel==8){ //Eventos especiales en nivel 3 y 8
             vidasRestantes=acumuladorVidas(*jugador1);
             graficoHud(vidasRestantes, jugador1->puntaje);
             do{
@@ -44,8 +39,8 @@ void procesoJuego(tRegJugador* jugador1){
                 scanf("%d", &campaOTienda);
                 switch(campaOTienda){
                     case 1:{
-                        campamento();
-                        actualizarVida(jugador1,1);
+                        campamento(jugador1);
+                        
                     	break;
                     }
                     case 2:{
@@ -59,7 +54,7 @@ void procesoJuego(tRegJugador* jugador1){
             
         }
         else{
-            if(jugador1->nivel==5){
+            if(jugador1->nivel==5){ //Evento en el que se desarrolla doble pregunta
                 vidasRestantes=acumuladorVidas(*jugador1);
                 sleep(3);
                 system("cls");
@@ -67,7 +62,7 @@ void procesoJuego(tRegJugador* jugador1){
                 sleep(2);
                 mostrarMapa(55);
                 generacionPregunta(vidasRestantes,jugador1->puntaje,5, &cantidadPuntaje);
-                generacionPelea(jugador1);
+                generacionPelea(jugador1); //se encuentra mas abajo
             
                 actualizarPuntaje(jugador1, 1, 2);
             
