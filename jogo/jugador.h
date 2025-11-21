@@ -24,9 +24,7 @@ void actualizarVentaja(tRegJugador*, int, int);
 void mostrarStats(tRegJugador);
 int acumuladorVidas();
 
-/*
-FILE * archivoJugador;
-*/
+//Inicializar contadores y acumuladores
 void inicializarStats(tRegJugador* jugador1){
     int i;
     for(i=0; i<VIDAS-2; i++){
@@ -93,6 +91,8 @@ void actualizarVentaja(tRegJugador* jugador1, int pActualizacion ,int pOpcion){/
 	}
 }
 
+//Funcion para mostrar el progreso al que se llego
+
 void mostrarStats(tRegJugador jugador1){
 	int vidasRestantes=0, i;
 	printf("\nPuntaje final: %d", jugador1.puntaje);
@@ -113,6 +113,7 @@ void mostrarStats(tRegJugador jugador1){
 	printf("\n");
 }
 
+//Funcion que devuelve la cantidad de vida restante cuando se la llama
 int acumuladorVidas(tRegJugador jugador1){
     int aux=0, i;
     for(i=0; i<VIDAS; i++){

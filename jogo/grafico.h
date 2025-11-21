@@ -1,5 +1,8 @@
 #include <stdio.h>
-void graficoMapa(int);
+
+//Se utilizo esta biblioteca para el apartado estetico del programa
+
+void mostrarMapa(int);
 void graficoHUD(int, int);
 
 void graficoHud(int pVida, int pPuntaje){
@@ -11,7 +14,7 @@ void graficoHud(int pVida, int pPuntaje){
     
 }
 
-void graficoMapa(int pNivel){
+void mostrarMapa(int pNivel){
     system("cls");
     switch(pNivel){
         case 1:{
@@ -131,7 +134,7 @@ void graficoMapa(int pNivel){
                 sleep(1);
         	break;
         }
-        case 9:{printf("\n");//lvl 8 superado
+        case 9:{printf("\n");//lvl Boss
                 printf("\n");
                 printf("\n");
                 printf("\n|----------|----------|----------|----------|----------|----------|----------|----------|-----------------|\n");
@@ -144,7 +147,7 @@ void graficoMapa(int pNivel){
                 sleep(1);
        	        break;
         }
-        case 10:{printf("\n");//lvl 8.1 superado
+        case 10:{printf("\n");//lvl Boss.2
                 printf("\n");
                 printf("\n");
                 printf("\n|----------|----------|----------|----------|----------|----------|----------|----------|-----------------|\n");
@@ -157,7 +160,7 @@ void graficoMapa(int pNivel){
                 sleep(1);
         	break;
         }
-        case 11:{printf("\n");//lvl 8.2 superado
+        case 11:{printf("\n");//lvl Boss.3
                 printf("\n");
                 printf("\n");
                 printf("\n|----------|----------|----------|----------|----------|----------|----------|----------|-----------------|\n");
@@ -170,7 +173,7 @@ void graficoMapa(int pNivel){
                 sleep(1);
         	break;
         }
-        case 12:{printf("\n");//lvl 9 superado
+        case 12:{printf("\n");//lvl Boss superado
                 printf("\n");
                 printf("\n");
                 printf("\n|----------|----------|----------|----------|----------|----------|----------|----------|-----------------|\n");
