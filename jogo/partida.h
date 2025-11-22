@@ -1,23 +1,22 @@
 #include "enemigos.h"
 
+
 //Prototipado de funciones
 void inicializadorDelJuego();
 void procesoJuego(tRegJugador*);
-void generacionPelea(tRegJugador*);
 bool preguntarContinuar();
-void intro();
 void menu();
-void creditos();
 
 //variables globales generales
 tRegJugador jugador;
-int nivelPregunta, vidasRestantes;
 
 //Funcion principal que estructura el juego
 void inicializadorDelJuego(){
     
-    intro();
     abrirArchivos();
+    inicializarArbol(&ranking);
+    strcpy(archivoRanking, "archivoRanking.dat");
+    cargarRankingDesdeArchivo(&ranking, &archivoRanking);
     menu();
     
 };
@@ -55,31 +54,10 @@ void procesoJuego(tRegJugador* jugador1){
         }
         else{
             if(jugador1->nivel==5){ //Evento en el que se desarrolla doble pregunta
-                vidasRestantes=acumuladorVidas(*jugador1);
-                sleep(3);
-                system("cls");
-                printf("OH NO, DOS ENEMIGOS DE ELITES HAN APARECIDO!!");
-                sleep(2);
-                mostrarMapa(55);
-                generacionPregunta(vidasRestantes,jugador1->puntaje,5, &cantidadPuntaje);
-                generacionPelea(jugador1); //se encuentra mas abajo
-            
-                actualizarPuntaje(jugador1, 1, 2);
-            
-                generacionPregunta(vidasRestantes,jugador1->puntaje,5, &cantidadPuntaje);
-                generacionPelea(jugador1);
-                
-                
-                actualizarPuntaje(jugador1, 1, 2);
-            
+                peleaElite(jugador1);
             }
 			else{
-                vidasRestantes=acumuladorVidas(*jugador1);
-                printf("\nOH NO UN ENEMIGO SALVAJE HA APARECIDO");
-                generacionPregunta(vidasRestantes,jugador1->puntaje,jugador1->nivel, &cantidadPuntaje);
-                generacionPelea(jugador1);
-                
-                actualizarPuntaje(jugador1, 1, cantidadPuntaje); //nivelPregunta
+                peleaNormal(jugador1);
             }
         
         }  
@@ -89,192 +67,47 @@ void procesoJuego(tRegJugador* jugador1){
     
       if(jugador1->nivel == 9){
             
-            printf("EL JEFE ESTA ENOJADO!!");//cambiar
-    	    sleep(1);
-    	    system("cls");
-    	    printf("\n\n\t\t\tEL JEFE ESTA ENOJADO!!!!");
-    	    sleep(1);
-    	    system("cls");
-    	    printf("\n\tEL JEFE ESTA ENOJADO!!!!");
-    	    sleep(1);
-    	    system("cls");
-    	    printf("\t\t\t\tEL JEFE ESTA ENOJADO!!!!");
-            sleep(1);
-            vidasRestantes=acumuladorVidas(*jugador1);
-            mostrarMapa(9);
-            generacionPregunta(vidasRestantes,jugador1->puntaje,9, &cantidadPuntaje);
-            generacionPelea(jugador1);
-            jugador1->enemigosMatados--;
-            actualizarPuntaje(jugador1, 1, cantidadPuntaje);
-            mostrarMapa(10);
-            generacionPregunta(vidasRestantes,jugador1->puntaje,9, &cantidadPuntaje);
-            generacionPelea(jugador1);
-            jugador1->enemigosMatados--;
-            actualizarPuntaje(jugador1, 1, cantidadPuntaje);
-            mostrarMapa(11);
-            generacionPregunta(vidasRestantes,jugador1->puntaje,9, &cantidadPuntaje);
-            generacionPelea(jugador1);
-            actualizarPuntaje(jugador1, 1, cantidadPuntaje);
-            mostrarMapa(12);
-            printf("Haz vencido al jefe");
-            sleep(2);
-    	    system("cls");
-    	    printf("Ganaste!!");//cambiar
-    	    sleep(1);
-    	    system("cls");
-    	    printf("\n\n\t\t\tGanaste!!!!");
-    	    sleep(1);
-    	    system("cls");
-    	    printf("\n\tGanaste!!!!");
-    	    sleep(1);
-    	    system("cls");
-    	    printf("\t\t\t\tGanaste!!!!");
-    	    sleep(1);
-    	    system("cls");
-    	    printf("\tGanaste!!!!");
+            peleaBoss(jugador1);
     	    mostrarStats(*jugador1);
+    	    char nombreJugador[MAX];
+            printf("\n¡Felicidades! Ingresa tu nombre para el ranking: ");
+            fflush(stdin);
+            fgets(nombreJugador, MAX, stdin);
+            nombreJugador[strcspn(nombreJugador, "\n")] = 0; // Quitar \n
+            
+            agregarAlRanking(&ranking, *jugador1, &nombreJugador);
+            guardarRankingEnArchivo(ranking, &archivoRanking);
+             printf("Jugador '%s' agregado al ranking con %d puntos\n", nombreJugador, jugador1->puntaje);
+            printf("\nEste es el ranking: ");
+            
+            graficarTop10(ranking);
+            printf("\n");
+    	    system("pause");
     	    creditos();
       }
       else{
           printf("Hasta luego!");
           mostrarStats(*jugador1);
           system("cls");
+          char nombreJugador[MAX];
+        printf("\nIngresa tu nombre para el ranking: ");
+        fflush(stdin);
+        fgets(nombreJugador, MAX, stdin);
+        nombreJugador[strcspn(nombreJugador, "\n")] = 0; // Quitar \n
+        
+        agregarAlRanking(&ranking, *jugador1, &nombreJugador);
+        guardarRankingEnArchivo(ranking, &archivoRanking);
+        printf("Jugador '%s' agregado al ranking con %d puntos\n", nombreJugador, jugador1->puntaje);
+        
+        printf("\n");
+	    system("pause");
           creditos();
           exit(EXIT_SUCCESS);
       }  
 }
-       
-void generacionPelea(tRegJugador* jugador1){
-    char respuesta;
-    bool respuestaIncorrecta, escudo=false;
-    int opcion,i, cantidadPuntaje;
-    
-    if(jugador1->ventajaCambio){
-        if(jugador1->ventajaEscudo){
-            do{
-               printf("\nPosee ambas ventajas\n1-Cambio pregunta\n2-Escudo\n3-No usar\n\n");
-               fflush(stdin);
-               scanf("\n%d", &opcion);   
-               switch(opcion){
-                   case 1:{
-                       printf("\nNueva pregunta:\n");
-                       generacionPregunta(vidasRestantes,jugador1->puntaje, jugador1->nivel, &cantidadPuntaje);
-                       actualizarVentaja(jugador1, 2, 1);
-                       break;
-                   }
-                   case 2:{
-                       printf("\nEscudo activado\n");
-                       escudo=true;
-                       actualizarVentaja(jugador1, 2, 2);
-       	               break;
-                   }
-                   case 3:{
-                       printf("\nNo se utilizara nada\n");
-                       break;
-                   }
-                   default:printf("\nError: eligio un numero incorrecto\n");
-               }
-            }while(opcion!=1 && opcion!=2 && opcion!=3);
-            
-        }else{
-            
-            do{
-               printf("\nPosee Ventaja cambio \n1-Usar\n2-No usar\n");
-               fflush(stdin);
-               scanf("%d", &opcion);   
-               switch(opcion){
-                   case 1:{
-                       printf("\nNueva pregunta:\n");
-                       generacionPregunta(vidasRestantes,jugador1->puntaje, jugador1->nivel, &cantidadPuntaje);
-                       actualizarVentaja(jugador1, 2, 1);
-                       break;
-                   }
-                   case 2:{
-                       printf("\nNo se utilizara nada\n");
-                       break;
-                   }
-                   default:printf("\nError: eligio un numero incorrecto\n");
-               }
-            }while(opcion!=1 && opcion!=2);
-        }
-        
-    }else{
-        if(jugador1->ventajaEscudo){
-            do{
-               printf("\nPosee Ventaja escudo \n1-Usar\n2-No usar\n");
-               fflush(stdin);
-               scanf("%d", &opcion);   
-               switch(opcion){
-                   case 1:{
-                       printf("\nEscudo activado\n");
-                       escudo=true;
-                       actualizarVentaja(jugador1, 2, 2);
-       	               break;
-                   }
-                   case 2:{
-                       printf("\nNo se utilizara nada\n");
-                       break;
-                   }
-                   default:printf("\nError: eligio un numero incorrecto\n");
-               }
-            }while(opcion!=1 && opcion!=2);
-        }  
-    }
-    
-	do{
-	    vidasRestantes=acumuladorVidas(*jugador1);
-    //    graficoPregunta(vidasRestantes, jugador1->puntaje);
-        printf("\nIngrese respuesta: \t");
-        do{
-          fflush(stdin);
-          scanf("%c", &respuesta);
-          if(!esABCD(respuesta)){
-             printf("\nElegista una letra equivocada, ingrese denuevo\n");
-          }
-        }while(!esABCD(respuesta));
-           
-    	if(respuestaCorrecta(tolower(respuesta), correcta)){
-    	    printf("\nRespuesta correcta! Puede avanzar.\n");
-       		respuestaIncorrecta=false;     		
-       	}
-    	else{
-    		respuestaIncorrecta=true;
-    		if(escudo){
-    		    printf(" \nProtegido por el escudo!");
-    		    printf("\n\n\n\t\tRESPUESTA INCORRECTA, SIGUES TENIENDO: %d VIDAS (responda devuelta)\n",vidasRestantes);
-    		}else{
-    		    printf("\n\n\n\t\tRESPUESTA INCORRECTA, PERDISTE UNA VIDA TE QUEDAN: %d (responda devuelta)\n",vidasRestantes-1);
-    		    actualizarVida(jugador1, 2);
-    		}
-    	}
-        escudo=false;	         
-	}while(respuestaIncorrecta && acumuladorVidas(*jugador1)>0);
 
-
-	if(acumuladorVidas(*jugador1)==0){
-	    sleep(2);
-	    system("cls");
-	    printf("Perdiste!!");//cambiar
-	    sleep(1);
-	    system("cls");
-	    printf("\n\n\t\t\tPerdiste!!");
-	    sleep(1);
-	    system("cls");
-	    printf("\n\tPerdiste!!");
-	    sleep(1);
-	    system("cls");
-	    printf("\t\t\t\tPerdiste!!");
-	    sleep(1);
-	    system("cls");
-	    printf("\tPerdiste!!");
-	    mostrarStats(*jugador1);
-	    creditos();
-	}
-	
-	jugador1->enemigosMatados++; //cuenta enemigos matados luego de comprobar que no perdio
-}
-
-bool preguntarContinuar(){
+//Funcion para finalizar o continuar con el juego
+bool preguntarContinuar(){ 
     
     char respuesta;
     do{
@@ -294,30 +127,12 @@ bool preguntarContinuar(){
     
 }
 
-void intro(){
-    
-    printf("Hola! bienvenido al juego slay the algorithm!");
-    
-
-    printf("\n\n\n\t Disfrutalo!");
-    sleep(3);
-    system("cls");
-}
-
-void creditos(){
-    
-    printf("\n\nEste juego fue desarrollado y tiene los derechos reservados a Fabricio Gonzalez Oviedo y Mario Daniel Rodas.");
-    printf("\n\tPara la materia AED II de la carrera LSI de la UNNE. (24/11/2025)\n\n");
-    sleep(3);
-    system("pause");
-    exit(EXIT_SUCCESS);
-}
-
+//Funcion para comenzar el juego
 void menu(){
     int seleccion;
     tRegJugador jugador;
     do{
-       printf("\n\n\t1-Empezar\n\t2-Instrucciones\n\t3-Salir\n\n");
+       printf("\n\n\t1-Empezar\n\t2-Instrucciones\n\t3-ranking\n\t4-salir\n\n");
        fflush(stdin);
        scanf("%d",&seleccion);
        switch(seleccion){
@@ -339,15 +154,21 @@ void menu(){
            	break;
            }
            case 2:{
-               printf("Este juego basico es basado un juego estilo roguelite, en el que principalmente se trata de generaciones aleatorias de \npreguntas con un sistema de vidas y ventajas en el que errar cada pregunta te resta 1 de vida, y responder \ncorrectamente te suma puntaje en el que se acumula hasta el final de la partida.\nTales ventajas pueden ser: Escudo(te libra de 1 de danio al errar una pregunta), Cambio(cambia la pregunta una vez \nseleccionada).\nLos niveles de enemigos(preguntas), varian de nivel de dificultad y posiblemente te encuentres con un enemigo o varios \ny al final de la run te encontraras contra un jefe, en el que cuidado! puede o no ser dificil.\nA lo largo del camino te encontraras con campamentos en el que restauraran 1 vida o tiendas en el que podras canjear \npuntos por alguna ventaja(no se pueden tener la misma mas de una vez).\nPor favor disfruta y recuerda que solo es un juego, no te frustres que todo se aprende disfrutando un poco mas.:)");
+               printf("Este juego basico es basado un juego estilo roguelite, en el que principalmente se trata de generaciones aleatorias de \npreguntas con un sistema de vidas y ventajas en el que errar cada pregunta te resta 1 de vida, y responder \ncorrectamente te suma puntaje en el que se acumula hasta el final de la partida.\nTales ventajas pueden ser: Escudo(te libra de 1 de danio al errar una pregunta), Cambio(cambia la pregunta una vez \nseleccionada).Siempre que inicies una partida comenzaras con una sola ventaja.\nLos niveles de enemigos(preguntas), varian de nivel de dificultad y posiblemente te encuentres con un enemigo o varios \ny al final de la run te encontraras contra un jefe, en el que cuidado! puede o no ser dificil.\nA lo largo del camino te encontraras con campamentos en el que restauraran 1 vida o tiendas en el que podras canjear \npuntos por alguna ventaja(no se pueden tener la misma mas de una vez).\nPor favor disfruta y recuerda que solo es un juego, no te frustres que todo se aprende disfrutando un poco mas.:)");
+           	break;
+           	}
+           case 3:{
+               system("cls");
+               graficarTop10(ranking);
+               system("pause");
            	break;
            }
-           case 3:{
+           case 4:{
                creditos();
            	break;
            }default:printf("Eleccion incorrecta");
        }   
-    }while(seleccion!=3);
+    }while(seleccion!=4);
     
 }
        

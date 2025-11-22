@@ -1,9 +1,14 @@
+#include <stdlib.h>
 #include <stdio.h>
+#include "ranking.h"
 
 //Se utilizo esta biblioteca para el apartado estetico del programa
 
 void mostrarMapa(int);
 void graficoHUD(int, int);
+void creditos();
+tArbolRanking ranking;
+tStringRanking archivoRanking;
 
 void graficoHud(int pVida, int pPuntaje){
     printf("\n-------------------------------------------------------------------------------------------------------------");
@@ -190,4 +195,17 @@ void mostrarMapa(int pNivel){
     }
 }
 
-
+void creditos(){
+    
+    printf("\n\nEste juego fue desarrollado y tiene los derechos reservados a Fabricio Gonzalez Oviedo y Mario Daniel Rodas.");
+    printf("\n\tPara la materia AED II de la carrera LSI de la UNNE. (24/11/2025)\n\n");
+    strcpy(archivoRanking, "archivoRanking.dat");
+    guardarRankingEnArchivo(ranking, &archivoRanking);
+    
+    //liberar memoria
+    limpiarRanking(&ranking);
+    
+    sleep(3);
+    system("pause");
+    exit(EXIT_SUCCESS);
+}
